@@ -3,7 +3,7 @@
 import { useQueryClient } from '@tanstack/react-query';
 import ReviewOnboardingModal from 'app/review-modal/components/ReviewOnboardingModal';
 import LoadingSvg from 'components/loading/loading-svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import type {
   ApiResponseImageReviewDetailResponse,
@@ -87,6 +87,15 @@ export default function ClientPage({ userStatus }: ImageReviewClientPageProps) {
   };
 
   const detailQueries = useAllImageReviewDetails(reviewData);
+  const currentIndex = reviewData.findIndex(
+    (review) => review.reviewId === currentReviewId
+  );
+
+  useEffect(() => {
+    if (currentIndex === -1) {
+      router.back();
+    }
+  }, [currentIndex]);
 
   if (detailQueries.some((q) => q.isLoading)) {
     return (
@@ -106,14 +115,12 @@ export default function ClientPage({ userStatus }: ImageReviewClientPageProps) {
       }
     }
   });
+  console.log('detailQueriesfirst' + detailQueries);
+  console.log('reviewData' + reviewData);
 
-  const currentIndex = reviewData.findIndex(
-    (review) => review.reviewId === currentReviewId
-  );
-
-  if (currentIndex === -1) {
-    return <div>리뷰를 찾을 수 없습니다.</div>;
-  }
+  // if (currentIndex === -1) {
+  //   router.back();
+  // }
 
   const allReviews: ReviewDetail[] = reviewData
     .filter((review) => {

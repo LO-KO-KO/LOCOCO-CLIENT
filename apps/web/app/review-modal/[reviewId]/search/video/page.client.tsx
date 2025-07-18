@@ -10,7 +10,7 @@ import {
 import ReviewOnboardingModal from 'app/review-modal/components/ReviewOnboardingModal';
 import LoadingSvg from 'components/loading/loading-svg';
 import { REVIEW_KEYS } from 'constants/query-key';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import type {
   ApiResponseVideoReviewDetailResponse,
@@ -85,6 +85,15 @@ export default function ClientPage({ userStatus }: VideoReviewClientPageProps) {
   const handleCloseOnboarding = () => {
     setIsOnboardingOpen(false);
   };
+  const currentIndex = reviewData.findIndex(
+    (review) => review.reviewId === currentReviewId
+  );
+
+  useEffect(() => {
+    if (currentIndex === -1) {
+      router.back();
+    }
+  }, [currentIndex]);
 
   const detailQueries = useAllVideoReviewDetails(reviewData);
 
@@ -106,14 +115,6 @@ export default function ClientPage({ userStatus }: VideoReviewClientPageProps) {
       }
     }
   });
-
-  const currentIndex = reviewData.findIndex(
-    (review) => review.reviewId === currentReviewId
-  );
-
-  if (currentIndex === -1) {
-    return <div>리뷰를 찾을 수 없습니다.</div>;
-  }
 
   const allReviews: ReviewDetail[] = reviewData
     .filter((review) => {
