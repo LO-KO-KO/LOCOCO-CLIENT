@@ -19,6 +19,7 @@ import {
 } from '@lococo/design-system';
 import Input from '@lococo/design-system/components/input/Input';
 import { cn } from '@/lib/utils';
+import { useScrollHeader } from './use-scroll-header';
 
 interface TopUtilItemProps {
   icon: React.ReactNode;
@@ -73,16 +74,10 @@ export function TopUtilItem({
     </button>
   );
 }
-export function TopUtil({
-  visible,
-  authStatus,
-}: {
-  visible: boolean;
-  authStatus: boolean;
-}) {
+export function TopUtil({ authStatus }: { authStatus: boolean }) {
   const router = useRouter();
   const [loginLabel, setLoginLabel] = useState('ログイン');
-
+  const { headerMarginTop } = useScrollHeader();
   useEffect(() => {
     if (authStatus) {
       setLoginLabel('ログアウト');
@@ -106,11 +101,9 @@ export function TopUtil({
 
   return (
     <div
+      style={{ marginTop: `${headerMarginTop}px` }}
       className={cn(
-        'flex w-full items-center justify-end self-stretch overflow-hidden px-[11.9rem] py-[2rem] transition-all duration-300 ease-out',
-        !visible
-          ? 'max-h-0 translate-y-[-100%] py-0 opacity-0'
-          : 'max-h-20 translate-y-0 opacity-100'
+        'flex w-full items-center justify-end self-stretch overflow-hidden px-[11.9rem] py-[2rem] transition-all duration-300 ease-out'
       )}
     >
       <TopUtilItem

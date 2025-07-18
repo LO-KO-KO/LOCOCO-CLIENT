@@ -4,7 +4,6 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { CategoryBar, TopUtil } from './header-content';
 import { useHeaderAction } from './use-header-action';
-import { useIntersect } from './use-intersect';
 
 interface HeaderProps {
   authStatus: boolean;
@@ -25,14 +24,10 @@ const header = React.memo(function Header({ authStatus }: HeaderProps) {
     handleChangeSearchValue,
     handleSearchIconClick,
   } = useHeaderAction();
-  const [observerRef, isVisible] = useIntersect(false);
 
   return (
     <>
-      <div
-        ref={observerRef}
-        className="pointer-events-none absolute left-0 top-0 h-1 w-full bg-transparent"
-      />
+      <div className="pointer-events-none absolute left-0 top-0 h-1 w-full bg-transparent" />
       <div
         className={cn(
           'sticky top-0 z-30 mx-auto flex w-full min-w-[1366px] flex-col bg-white',
@@ -43,7 +38,7 @@ const header = React.memo(function Header({ authStatus }: HeaderProps) {
             'border-b-[0.1rem] border-gray-500'
         )}
       >
-        <TopUtil visible={isVisible} authStatus={authStatus} />
+        <TopUtil authStatus={authStatus} />
         <CategoryBar
           categories={categories}
           selectedCategory={selectedCategory}
